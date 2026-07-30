@@ -58,7 +58,7 @@ function Hero() {
                 <span className="w-2.5 h-2.5 rounded-full bg-[#5fd9c4]/70" />
               </span>
               <span className={`ml-3 font-mono text-xs truncate ${t.chromeText}`}>
-                ~/peter-nova/portfolio/Home.jsx
+                ~/peter-nova/portfolio
               </span>
             </div>
             <span className="flex items-center gap-1.5 font-mono text-xs shrink-0">
