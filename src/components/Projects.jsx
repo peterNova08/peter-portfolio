@@ -37,7 +37,7 @@ function Projects() {
       description:
         "Redeveloped the official website from Google Sites to WordPress, improving content management, structure, accessibility, and overall website functionality.",
       tech: ["WordPress", "HTML", "CSS", "JavaScript"],
-      demo: "https://sdolegazpicity.com/",
+      demo: "https://sdolegazpicity.com/website-developers/",
     },
   ];
 

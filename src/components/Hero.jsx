@@ -1,5 +1,6 @@
 import profile from "../assets/images/profile.jpg";
 import resume from "../assets/resume/updatedresume.pdf";
+import { useTheme } from "../context/ThemeContext";
 
 import {
   FaGithub,
@@ -10,18 +11,16 @@ import {
 } from "react-icons/fa";
 import { HiArrowRight, HiArrowDownTray } from "react-icons/hi2";
 import { SiReact, SiFlutter, SiWordpress, SiSupabase } from "react-icons/si";
-import { useTheme } from "../context/ThemeContext";
-import WindowDots from "./WindowDots";
 
 function Hero() {
   const { t } = useTheme();
 
   const badges = [
-    { icon: SiReact, label: "React", position: "-top-5 -left-6 sm:-left-12" },
-    { icon: SiSupabase, label: "Supabase", position: "top-10 -right-6 sm:-right-14" },
-    { icon: SiFlutter, label: "Flutter", position: "bottom-16 -left-8 sm:-left-16" },
-    { icon: SiWordpress, label: "WordPress", position: "-bottom-5 right-4 sm:right-8" },
-  ];
+  { icon: SiReact, label: "React", position: "-top-1 -left-3 sm:-left-10" },
+  { icon: SiSupabase, label: "Supabase", position: "-top-5 right-2 sm:right-4" },
+  { icon: SiFlutter, label: "Flutter", position: "bottom-16 -left-8 sm:-left-16" },
+  { icon: SiWordpress, label: "WordPress", position: "-bottom-5 right-4 sm:right-8" },
+];
 
   const socials = [
     { icon: FaGithub, href: "https://github.com/peterNova08" },
@@ -32,8 +31,9 @@ function Hero() {
   return (
     <section
       id="home"
-      className={`relative min-h-screen flex items-center pt-24 pb-16 overflow-hidden transition-colors duration-500 ${t.sectionPlain}`}
+      className={`relative min-h-screen flex items-center pt-24 pb-16 overflow-hidden transition-colors duration-500 ${t.section}`}
     >
+      {/* faint editor-grid atmosphere, matches every other section */}
       <div
         className={`pointer-events-none absolute inset-0 ${t.gridOpacity}`}
         style={{
@@ -41,33 +41,40 @@ function Hero() {
           backgroundSize: "48px 48px",
         }}
       />
-      <div className={`pointer-events-none absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] blur-[140px] rounded-full ${t.glowAmbient}`} />
+      {/* ambient glow */}
+      <div className="pointer-events-none absolute top-1/3 left-1/2 -translate-x-1/2 w-150 h-150 bg-[#f2b544]/5 blur-[140px] rounded-full" />
 
       <div className="relative max-w-6xl mx-auto px-6 w-full">
+        {/* real heading for a11y/SEO — the visual heading below is decorative code */}
         <h1 className="sr-only">Peter Nova — Full-Stack Web Developer</h1>
 
-        <div className={`rounded-2xl border transition-all duration-500 ${t.card}`}>
-          <div className="rounded-t-2xl overflow-hidden">
-            <div className={`flex items-center justify-between px-5 py-3 border-b ${t.chrome}`}>
-              <div className="flex items-center gap-2 min-w-0">
-                <WindowDots />
-                <span className={`ml-3 font-mono text-xs truncate ${t.chromeText}`}>
-                  ~/peter-nova/portfolio/Home.jsx
-                </span>
-              </div>
-              <span className="flex items-center gap-1.5 font-mono text-xs shrink-0">
-                <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${t.liveDot}`} />
-                <span className={t.syntaxLive}>available for work</span>
+        <div className={`rounded-2xl border overflow-hidden transition-all duration-500 ${t.card}`}>
+          {/* window chrome — same pattern as every other section */}
+          <div className={`flex items-center justify-between px-5 py-3 border-b ${t.chrome}`}>
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="flex gap-1.5 shrink-0">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#ef5350]/70" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#f2b544]/70" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#5fd9c4]/70" />
+              </span>
+              <span className={`ml-3 font-mono text-xs truncate ${t.chromeText}`}>
+                ~/peter-nova/portfolio/Home.jsx
               </span>
             </div>
+            <span className="flex items-center gap-1.5 font-mono text-xs shrink-0">
+              <span className={`w-1.5 h-1.5 rounded-full ${t.liveDot} animate-pulse`} />
+              <span className={t.syntaxLive}>available for work</span>
+            </span>
           </div>
 
+          {/* main content */}
           <div className={`grid lg:grid-cols-2 gap-14 lg:gap-8 p-8 sm:p-12 items-center border-t ${t.divider}`}>
-            <div>
+            {/* code-styled intro */}
+            <div className="order-2 lg:order-1">
               <div className="font-mono text-base sm:text-lg leading-[1.9]">
                 <div>
-                  <span className={t.syntaxKeyword}>const</span>{" "}
-                  <span className={t.heading}>developer</span>{" "}
+                  <span className={t.syntaxLive}>const</span>{" "}
+                  <span className={t.body}>developer</span>{" "}
                   <span className={t.muted}>= {"{"}</span>
                 </div>
                 <div className="pl-6">
@@ -106,16 +113,16 @@ function Hero() {
               <div className="flex flex-wrap gap-4 mt-10">
                 <a
                   href="#projects"
-                  className={`group/cta inline-flex items-center gap-2 font-mono text-sm transition-all duration-300 px-6 py-3.5 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f2b544] ${t.cta}`}
+                  className="group/cta inline-flex items-center gap-2 font-mono text-sm text-[#0b0d12] bg-[#f2b544] hover:bg-[#f5c569] transition-colors px-6 py-3.5 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f2b544]"
                 >
-                  <span className={t.ctaText}>$</span> view --projects
+                  <span className="text-[#0b0d12]/60">$</span> view --projects
                   <HiArrowRight className="transition-transform duration-200 group-hover/cta:translate-x-1" />
                 </a>
 
                 <a
                   href={resume}
                   download
-                  className={`inline-flex items-center gap-2 font-mono text-sm border transition-all duration-300 px-6 py-3.5 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5fd9c4] ${t.outlineBtn}`}
+                  className={`inline-flex items-center gap-2 font-mono text-sm border transition-colors px-6 py-3.5 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5fd9c4] ${t.muted} ${t.divider} hover:border-[#5fd9c4]/40 hover:text-[#5fd9c4]`}
                 >
                   <HiArrowDownTray /> resume.pdf
                 </a>
@@ -128,7 +135,7 @@ function Hero() {
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`transition-colors duration-300 ${t.social}`}
+                    className={`transition-colors hover:text-[#5fd9c4] ${t.muted}`}
                   >
                     <Icon size={22} />
                   </a>
@@ -136,25 +143,22 @@ function Hero() {
               </div>
             </div>
 
-            <div className="flex justify-center lg:justify-end">
+            {/* profile visual */}
+            <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
               <div className="relative">
-                <div className="relative w-64 h-64 sm:w-80 sm:h-80">
-                  <div className={`pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full scale-125 blur-[100px] rounded-full ${t.glowWarm}`} />
-                  <div className={`pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full scale-125 blur-[100px] rounded-full ${t.glowCool}`} />
+                <div className="absolute inset-0 m-auto w-72 h-72 bg-[#f2b544]/20 blur-[100px] rounded-full" />
+                <div className="absolute inset-0 m-auto w-72 h-72 bg-[#5fd9c4]/20 blur-[100px] rounded-full translate-x-10" />
 
-                  <div className={`relative z-10 w-full h-full rounded-full overflow-hidden border-4 ${t.profileBorder}`}>
-                    <img
-                      src={profile}
-                      alt="Peter Nova"
-                      className="w-full h-full object-cover object-[50%_18%]"
-                    />
-                  </div>
-                </div>
+                <img
+                  src={profile}
+                  alt="Peter Nova"
+                  className={`relative w-64 h-64 sm:w-80 sm:h-80 rounded-full object-cover object-[center_20%] border-4 shadow-2xl ${t.divider}`}
+                />
 
                 {badges.map(({ icon: Icon, label, position }) => (
                   <span
                     key={label}
-                    className={`absolute ${position} flex items-center gap-2 font-mono text-xs border px-3 py-2 rounded-lg ${t.badge}`}
+                    className={`absolute ${position} flex items-center gap-2 font-mono text-xs px-3 py-2 rounded-lg shadow-xl ${t.tag}`}
                   >
                     <Icon /> {label}
                   </span>
@@ -163,8 +167,9 @@ function Hero() {
             </div>
           </div>
 
+          {/* status bar — the one deliberate bright accent in the section */}
           <div className="rounded-b-2xl overflow-hidden">
-            <div className={`flex items-center justify-between px-5 py-2.5 font-mono text-[11px] ${t.statusBar}`}>
+            <div className="flex items-center justify-between px-5 py-2.5 bg-[#5fd9c4] text-[#0b0d12] font-mono text-[11px]">
               <span className="flex items-center gap-4">
                 <span className="flex items-center gap-1.5">
                   <FaCodeBranch /> main

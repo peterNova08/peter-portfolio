@@ -38,7 +38,7 @@ function Navbar() {
           scrolled ? t.navScrolled : "bg-transparent border-b border-transparent"
         }`}
       >
-        <div className="max-w-6xl mx-auto px-6 h-[4.5rem] flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-6 h-18 flex items-center justify-between">
           <a
             href="#home"
             className={`font-mono text-2xl font-bold tracking-tight transition-colors duration-300 ${t.navLogo}`}
@@ -154,9 +154,9 @@ function Navbar() {
       )}
 
       <div
-        className={`fixed top-[4.5rem] left-0 right-0 z-40 lg:hidden overflow-hidden transition-all duration-300 ease-out border-b backdrop-blur-xl ${
+        className={`fixed top-18 left-0 right-0 z-40 lg:hidden overflow-hidden transition-all duration-300 ease-out border-b backdrop-blur-xl ${
           menuOpen
-            ? `max-h-[28rem] opacity-100 ${t.mobileMenu}`
+            ? `max-h-112 opacity-100 ${t.mobileMenu}`
             : "max-h-0 opacity-0 border-transparent pointer-events-none"
         }`}
       >
