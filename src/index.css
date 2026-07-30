@@ -1,155 +1,201 @@
 @import "tailwindcss";
 
-@variant dark (&:where(.dark, .dark *));
-
-@theme {
-  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
-}
+/* Tailwind v4: dark: utilities respond to .dark on <html> */
+@custom-variant dark (&:where(.dark, .dark *));
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 6rem;
 }
 
 :root {
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #fff;
+  --border: #e5e4e7;
+  --code-bg: #f4f3ec;
+  --accent: #aa3bff;
+  --accent-bg: rgba(170, 59, 255, 0.1);
+  --accent-border: rgba(170, 59, 255, 0.5);
+  --social-bg: rgba(244, 243, 236, 0.5);
+
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px,
+    rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+
   color-scheme: light;
+  color: var(--text);
+  background: var(--bg);
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
 }
 
-:root.light {
-  --bg: #f5f3ef;
-  --text: #57534e;
-  --text-h: #1c1917;
-  color-scheme: light;
+
+/* System dark mode (only when user has not selected manually) */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light):not(.dark) {
+
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #16171d;
+    --border: #2e303a;
+    --code-bg: #1f2028;
+
+    --accent: #c084fc;
+    --accent-bg: rgba(192,132,252,0.15);
+    --accent-border: rgba(192,132,252,0.5);
+
+    --social-bg: rgba(47,48,58,0.5);
+
+    --shadow:
+      rgba(0,0,0,0.4) 0 10px 15px -3px,
+      rgba(0,0,0,0.25) 0 4px 6px -2px;
+
+    color-scheme: dark;
+  }
+
+  :root:not(.light):not(.dark) #social .button-icon {
+    filter: invert(1) brightness(2);
+  }
 }
 
+
+/* Manual dark mode */
 :root.dark {
-  --bg: #0b0d12;
-  --text: #8b93a7;
-  --text-h: #eef0f5;
+
+  --text: #9ca3af;
+  --text-h: #f3f4f6;
+  --bg: #16171d;
+  --border: #2e303a;
+  --code-bg: #1f2028;
+
+  --accent: #c084fc;
+  --accent-bg: rgba(192,132,252,0.15);
+  --accent-border: rgba(192,132,252,0.5);
+
+  --social-bg: rgba(47,48,58,0.5);
+
+  --shadow:
+    rgba(0,0,0,0.4) 0 10px 15px -3px,
+    rgba(0,0,0,0.25) 0 4px 6px -2px;
+
   color-scheme: dark;
 }
 
+
+:root.dark #social .button-icon {
+  filter: invert(1) brightness(2);
+}
+
+
+/* Manual light mode */
+:root.light {
+
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #fff;
+  --border: #e5e4e7;
+  --code-bg: #f4f3ec;
+
+  --accent: #aa3bff;
+  --accent-bg: rgba(170,59,255,0.1);
+  --accent-border: rgba(170,59,255,0.5);
+
+  --social-bg: rgba(244,243,236,0.5);
+
+  --shadow:
+    rgba(0,0,0,0.1) 0 10px 15px -3px,
+    rgba(0,0,0,0.05) 0 4px 6px -2px;
+
+  color-scheme: light;
+}
+
+
+:root.light #social .button-icon {
+  filter: none;
+}
+
+
 body {
   margin: 0;
-  font-family: var(--font-sans);
-  background: var(--bg);
-  color: var(--text);
-  transition: background 0.4s ease, color 0.4s ease;
+  transition: background .3s ease, color .3s ease;
 }
+
 
 #root {
   min-height: 100svh;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
 }
 
-::selection {
-  background: rgba(15, 118, 110, 0.22);
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
 }
 
-:root.dark ::selection {
-  background: rgba(95, 217, 196, 0.22);
-}
 
-/* scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-:root.light ::-webkit-scrollbar-thumb {
-  background: #d6d0c4;
-  border-radius: 99px;
-}
-:root.dark ::-webkit-scrollbar-thumb {
-  background: #2a3040;
-  border-radius: 99px;
-}
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
 
-/* animations */
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-@keyframes pulse-ring {
-  0% { transform: scale(1); opacity: 0.5; }
-  100% { transform: scale(1.12); opacity: 0; }
-}
-
-@keyframes scroll-hint {
-  0%, 100% { transform: translateY(0); opacity: 0.5; }
-  50% { transform: translateY(6px); opacity: 1; }
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
-
-.animate-float {
-  animation: float 5s ease-in-out infinite;
-}
-
-.animate-float-delayed {
-  animation: float 5s ease-in-out 1.2s infinite;
-}
-
-.animate-scroll-hint {
-  animation: scroll-hint 2s ease-in-out infinite;
-}
-
-.profile-ring::before {
-  content: "";
-  position: absolute;
-  inset: -3px;
-  border-radius: 9999px;
-  background: linear-gradient(135deg, #f2b544, #5fd9c4, #f2b544);
-  background-size: 200% 200%;
-  animation: shimmer 6s linear infinite;
-  z-index: 0;
-}
-
-:root.light .profile-ring::before {
-  background: linear-gradient(135deg, #d97706, #0f766e, #d97706);
-  background-size: 200% 200%;
-}
-
-.reveal {
-  transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.reveal-hidden {
-  opacity: 0;
-  transform: translateY(28px);
-}
-
-.reveal-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+  @media (max-width:1024px) {
+    font-size:36px;
+    margin:20px 0;
   }
-  .reveal,
-  .reveal-hidden,
-  .reveal-visible,
-  .animate-float,
-  .animate-float-delayed,
-  .animate-scroll-hint,
-  .profile-ring::before {
-    animation: none !important;
-    transition: none !important;
-    opacity: 1 !important;
-    transform: none !important;
+}
+
+
+h2 {
+  font-size:24px;
+  line-height:118%;
+  letter-spacing:-0.24px;
+  margin:0 0 8px;
+
+  @media(max-width:1024px){
+    font-size:20px;
   }
+}
+
+
+p {
+  margin:0;
+}
+
+
+code,
+.counter {
+
+  font-family:var(--mono);
+  display:inline-flex;
+  border-radius:4px;
+  color:var(--text-h);
+
+}
+
+
+code {
+
+  font-size:15px;
+  line-height:135%;
+  padding:4px 8px;
+  background:var(--code-bg);
+
 }
