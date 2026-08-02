@@ -1,5 +1,5 @@
 import profile from "../assets/images/profile.jpg";
-import resume from "../assets/resume/updatedresume.pdf";
+import resume from "../assets/resume/realresume.pdf";
 import { useTheme } from "../context/ThemeContext";
 
 import {

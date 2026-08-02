@@ -213,7 +213,7 @@ function Projects() {
           }}
         >
           {/* header bar */}
-          <div className="relative z-20 flex items-center justify-between px-5 py-3.5 border-b border-white/[0.06]">
+          <div className="relative z-20 flex items-center justify-between px-5 py-3.5 border-b border-white/6">
             <div className="flex items-center gap-2 font-mono text-[11px] tracking-wider text-amber-400/90">
               <span
                 className="w-1.5 h-1.5 rounded-full pulse-dot"
@@ -234,7 +234,7 @@ function Projects() {
           </div>
 
           {/* autoplay progress bar */}
-          <div className="relative h-[2px] bg-white/[0.04] overflow-hidden">
+          <div className="relative h-0.5 bg-white/4 overflow-hidden">
             <div
               key={`${activeIndex}-${progressKey}`}
               ref={progressRef}
@@ -300,7 +300,7 @@ function Projects() {
             </div>
 
             {/* info panel */}
-            <div className="w-full md:w-1/2 border-t md:border-t-0 md:border-l border-white/[0.06] p-6 md:p-8 flex flex-col justify-between min-h-[280px] md:min-h-[480px]">
+            <div className="w-full md:w-1/2 border-t md:border-t-0 md:border-l border-white/6 p-6 md:p-8 flex flex-col justify-between min-h-70 md:min-h-120">
               <div key={activeItem?.slug} className="content-fade">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="font-mono text-[11px] tracking-wider text-gray-500">
