@@ -310,8 +310,18 @@ function makeVertexArray(gl, bufLocNumElmPairs, indices) {
   return va;
 }
 
+// Mobile devices get a lower DPR cap — a 3x DPR canvas on a mid-range phone
+// GPU is a common source of "feels slow" that has nothing to do with load time,
+// but it compounds with the texture-atlas build below during first paint.
+function getDprCap() {
+  const isMobile =
+    typeof window !== 'undefined' &&
+    (window.matchMedia?.('(max-width: 768px)').matches || /Mobi|Android/i.test(navigator.userAgent));
+  return isMobile ? 1.5 : 2;
+}
+
 function resizeCanvasToDisplaySize(canvas) {
-  const dpr = Math.min(2, window.devicePixelRatio);
+  const dpr = Math.min(getDprCap(), window.devicePixelRatio || 1);
   const displayWidth = Math.round(canvas.clientWidth * dpr);
   const displayHeight = Math.round(canvas.clientHeight * dpr);
   const needResize = canvas.width !== displayWidth || canvas.height !== displayHeight;
@@ -507,11 +517,12 @@ class InfiniteGridMenu {
   scaleFactor = 1.0;
   movementActive = false;
 
-  constructor(canvas, items, onActiveItemChange, onMovementChange, onInit = null, scale = 1.0) {
+  constructor(canvas, items, onActiveItemChange, onMovementChange, onInit = null, scale = 1.0, onTextureLoading = null) {
     this.canvas = canvas;
     this.items = items || [];
     this.onActiveItemChange = onActiveItemChange || (() => {});
     this.onMovementChange = onMovementChange || (() => {});
+    this.onTextureLoading = onTextureLoading || (() => {});
     this.scaleFactor = scale;
     this.camera.position[2] = 3 * scale;
     this.#init(onInit);
@@ -616,18 +627,23 @@ class InfiniteGridMenu {
     canvas.width = this.atlasSize * cellSize;
     canvas.height = this.atlasSize * cellSize;
 
+    this.onTextureLoading(true);
+
     Promise.all(
       this.items.map(
         item =>
           new Promise(resolve => {
             const img = new Image();
             img.crossOrigin = 'anonymous';
+            img.decoding = 'async';
             img.onload = () => resolve(img);
+            img.onerror = () => resolve(null);
             img.src = item.image;
           })
       )
     ).then(images => {
       images.forEach((img, i) => {
+        if (!img) return;
         const x = (i % this.atlasSize) * cellSize;
         const y = Math.floor(i / this.atlasSize) * cellSize;
         ctx.drawImage(img, x, y, cellSize, cellSize);
@@ -636,6 +652,8 @@ class InfiniteGridMenu {
       gl.bindTexture(gl.TEXTURE_2D, this.tex);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
       gl.generateMipmap(gl.TEXTURE_2D);
+
+      this.onTextureLoading(false);
     });
   }
 
@@ -829,6 +847,7 @@ const InfiniteMenu = forwardRef(function InfiniteMenu(
   const sketchRef = useRef(null);
   const [activeItem, setActiveItem] = useState(null);
   const [isMoving, setIsMoving] = useState(false);
+  const [isTextureLoading, setIsTextureLoading] = useState(true);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -842,13 +861,15 @@ const InfiniteMenu = forwardRef(function InfiniteMenu(
     };
 
     if (canvas) {
+      setIsTextureLoading(true);
       sketch = new InfiniteGridMenu(
         canvas,
         items.length ? items : defaultItems,
         handleActiveItem,
         setIsMoving,
         sk => sk.run(),
-        scale
+        scale,
+        setIsTextureLoading
       );
       sketchRef.current = sketch;
     }
@@ -918,6 +939,36 @@ const InfiniteMenu = forwardRef(function InfiniteMenu(
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
       <canvas id="infinite-grid-menu-canvas" ref={canvasRef} />
+
+      {isTextureLoading && (
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            pointerEvents: 'none',
+            zIndex: 10
+          }}
+        >
+          <div
+            style={{
+              width: '28px',
+              height: '28px',
+              borderRadius: '50%',
+              border: '2px solid rgba(255,255,255,0.15)',
+              borderTopColor: '#fbbf24',
+              animation: 'infiniteMenuSpin 0.8s linear infinite'
+            }}
+          />
+          <style>{`
+            @keyframes infiniteMenuSpin {
+              to { transform: rotate(360deg); }
+            }
+          `}</style>
+        </div>
+      )}
 
       {showOverlay && activeItem && (
         <>
