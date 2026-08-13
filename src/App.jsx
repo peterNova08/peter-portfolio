@@ -4,7 +4,6 @@ import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import ScrollProgress from "./components/ScrollProgress";
 import BackToTop from "./components/BackToTop";
-import SectionErrorBoundary from "./components/SectionErrorBoundary";
 
 // Below-the-fold sections are code-split into their own chunks so the hero
 // can paint immediately without waiting on their JS (Projects in particular
@@ -40,42 +39,28 @@ function App() {
       <Navbar />
       <main>
         <Hero />
-        <SectionErrorBoundary>
-          <Suspense fallback={<SectionFallback />}>
-            <About />
-          </Suspense>
-        </SectionErrorBoundary>
-        <SectionErrorBoundary>
-          <Suspense fallback={<SectionFallback />}>
-            <Projects />
-          </Suspense>
-        </SectionErrorBoundary>
-        <SectionErrorBoundary>
-          <Suspense fallback={<SectionFallback />}>
-            <Experience />
-          </Suspense>
-        </SectionErrorBoundary>
-        <SectionErrorBoundary>
-          <Suspense fallback={<SectionFallback />}>
-            <Skills />
-          </Suspense>
-        </SectionErrorBoundary>
-        <SectionErrorBoundary>
-          <Suspense fallback={<SectionFallback />}>
-            <Education />
-          </Suspense>
-        </SectionErrorBoundary>
-        <SectionErrorBoundary>
-          <Suspense fallback={<SectionFallback />}>
-            <Contact />
-          </Suspense>
-        </SectionErrorBoundary>
-      </main>
-      <SectionErrorBoundary>
-        <Suspense fallback={null}>
-          <Footer />
+        <Suspense fallback={<SectionFallback />}>
+          <About />
         </Suspense>
-      </SectionErrorBoundary>
+        <Suspense fallback={<SectionFallback />}>
+          <Projects />
+        </Suspense>
+        <Suspense fallback={<SectionFallback />}>
+          <Experience />
+        </Suspense>
+        <Suspense fallback={<SectionFallback />}>
+          <Skills />
+        </Suspense>
+        <Suspense fallback={<SectionFallback />}>
+          <Education />
+        </Suspense>
+        <Suspense fallback={<SectionFallback />}>
+          <Contact />
+        </Suspense>
+      </main>
+      <Suspense fallback={null}>
+        <Footer />
+      </Suspense>
       <BackToTop />
     </ThemeProvider>
   );
