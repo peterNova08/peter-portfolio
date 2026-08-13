@@ -540,7 +540,11 @@ class InfiniteGridMenu {
     this.#updateProjectionMatrix(gl);
   }
 
+  isRunning = true;
+
   run(time = 0) {
+    if (!this.isRunning) return;
+
     this.#deltaTime = Math.min(32, time - this.#time);
     this.#time = time;
     this.#deltaFrames = this.#deltaTime / this.TARGET_FRAME_DURATION;
@@ -549,6 +553,21 @@ class InfiniteGridMenu {
     this.#animate(this.#deltaTime);
     this.#render();
 
+    requestAnimationFrame(t => this.run(t));
+  }
+
+  // Stops scheduling rAF entirely — used when the canvas scrolls out of
+  // view so it stops competing with scroll compositing for the main thread.
+  pause() {
+    this.isRunning = false;
+  }
+
+  // Resumes the loop. #time is reset so the next frame's deltaTime doesn't
+  // include the paused duration (which would otherwise spike the animation).
+  resume() {
+    if (this.isRunning) return;
+    this.isRunning = true;
+    this.#time = 0;
     requestAnimationFrame(t => this.run(t));
   }
 
@@ -852,6 +871,7 @@ const InfiniteMenu = forwardRef(function InfiniteMenu(
   useEffect(() => {
     const canvas = canvasRef.current;
     let sketch;
+    let observer;
 
     const handleActiveItem = index => {
       const itemIndex = index % items.length;
@@ -872,6 +892,24 @@ const InfiniteMenu = forwardRef(function InfiniteMenu(
         setIsTextureLoading
       );
       sketchRef.current = sketch;
+
+      // Only render while the sphere is actually visible — scrolled off-screen,
+      // the rAF loop would otherwise keep redrawing at 60fps and compete with
+      // scroll compositing for the main thread on mobile.
+      if ('IntersectionObserver' in window) {
+        observer = new IntersectionObserver(
+          ([entry]) => {
+            if (!sketch) return;
+            if (entry.isIntersecting) {
+              sketch.resume();
+            } else {
+              sketch.pause();
+            }
+          },
+          { rootMargin: '200px 0px' } // start a little before it enters view
+        );
+        observer.observe(canvas);
+      }
     }
 
     const handleResize = () => {
@@ -885,6 +923,8 @@ const InfiniteMenu = forwardRef(function InfiniteMenu(
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      if (observer) observer.disconnect();
+      if (sketch) sketch.pause();
       sketchRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
